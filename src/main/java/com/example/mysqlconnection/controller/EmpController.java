@@ -26,9 +26,9 @@ public class EmpController {
     @GetMapping("/")
     public List<EMP> getAllEmp(){
         logger.info("getAll method info.......");
-        logger.debug(" this is debug...");
-        logger.error(" This is error ...");
-        logger.trace("This is trace ....");
+        logger.debug(" this is debug log ...for getAllEmp()");
+        logger.error(" This is error log ...for getAllEmp()");
+        logger.trace("This is trace log ...for getAllEmp()....");
         Iterable<EMP> iterable= empCrudRepo.findAllEmps(Sort.by("name"));
         logger.info("findAll()...",iterable);
         ArrayList<EMP> bookingDetailsArrayList=new ArrayList<>();
@@ -39,10 +39,10 @@ public class EmpController {
     }
     @GetMapping("/{name}")
     public List<EMP> getAllEmpFindByName(@PathVariable String name){
-        logger.info("getAll method info.......");
-        logger.debug(" this is debug...");
-        logger.error(" This is error ...");
-        logger.trace("This is trace ....");
+        logger.info("getAll method info log ...for getAllEmpFindByName().......");
+        logger.debug(" this is debug log ...for getAllEmpFindByName()...");
+        logger.error(" This is error log ...for getAllEmpFindByName() ...");
+        logger.trace("This is trace log ...for getAllEmpFindByName()....");
         Iterable<EMP> iterable= empCrudRepo.findByName(name);
         logger.info("findAll()...",iterable);
         ArrayList<EMP> bookingDetailsArrayList=new ArrayList<>();
@@ -52,11 +52,11 @@ public class EmpController {
         return bookingDetailsArrayList;
     }
     @GetMapping("/{name}/{id}")
-    public List<EMP> getAllEmpFindByName(@PathVariable String name,@PathVariable int id){
-        logger.info("getAll method info.......");
-        logger.debug(" this is debug...");
-        logger.error(" This is error ...");
-        logger.trace("This is trace ....");
+    public List<EMP> getAllEmpFindByNameOrId(@PathVariable String name,@PathVariable int id){
+        logger.info("getAll method info..log ...for getAllEmpFindByNameOrId()........");
+        logger.debug(" this is debug log ...for getAllEmpFindByNameOrId()...");
+        logger.error(" This is error log ...for getAllEmpFindByNameOrId()......");
+        logger.trace("This is trace log ...for getAllEmpFindByNameOrId().......");
         Iterable<EMP> iterable= empCrudRepo.findByNameOrId(name,id);
         logger.info("findAll()...",iterable);
         ArrayList<EMP> bookingDetailsArrayList=new ArrayList<>();
@@ -80,7 +80,7 @@ public class EmpController {
         System.out.println(emp.getName());
         if(emp.getName().equals(null)){
             emp.setName("DefaultName");
-            logger.info("DefaultName setted for this emp");
+            logger.info("DefaultName setted for this emp..log ...for create new Emp()...");
         }
         else {
             logger.info("name not null", emp.getName());

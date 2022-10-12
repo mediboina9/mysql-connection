@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 public class EMP {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private int id;
    // @Column(insertable = false)
     private String name;
