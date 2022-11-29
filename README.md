@@ -1,1 +1,1 @@
-Bhunesh 
+System.out.print(a*b);
