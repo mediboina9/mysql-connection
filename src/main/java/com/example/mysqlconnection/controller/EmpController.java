@@ -1,15 +1,26 @@
 package com.example.mysqlconnection.controller;
 
 import com.example.mysqlconnection.repo.EmpCrudRepo;
+import com.example.mysqlconnection.service.CSVService;
+import com.example.mysqlconnection.service.CsvExportService;
 import com.example.mysqlconnection.service.EmpService;
 import com.example.mysqlconnection.repo.RepoJpa;
 import com.example.mysqlconnection.model.EMP;
+import com.sun.istack.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +34,9 @@ public class EmpController {
     private RepoJpa repoJpa;
     @Autowired
     private EmpService empService;
+
+
+
     @GetMapping("/")
     public List<EMP> getAllEmp(){
         logger.info("getAll method info.......");
@@ -75,7 +89,7 @@ public class EmpController {
         return empCrudRepo.findById(emp.getId());
     }
     @PostMapping("/")
-    public void createEmp(@RequestBody EMP emp){
+    public ResponseEntity<EMP> createEmp(@RequestBody  @NotNull EMP emp){
         logger.info("RequestBody.....",emp.getName());
         System.out.println(emp.getName());
         if(emp.getName().equals(null)){
@@ -87,6 +101,7 @@ public class EmpController {
         }
 
         empCrudRepo.save(emp);
+        return new ResponseEntity<>(emp,HttpStatus.CREATED);
     }
     @GetMapping("/msg")
     public String getMsg(){
@@ -99,5 +114,27 @@ public class EmpController {
                 emps =empService.getAllEmp();
                 logger.info("JpaRepo......",emps);
         return emps;
+    }
+  @Autowired
+  CsvExportService csvExportService;
+
+    @RequestMapping(path = "/employees")
+    public void getAllEmployeesInCsv(HttpServletResponse servletResponse) throws IOException, IOException {
+        servletResponse.setContentType("text/csv");
+        servletResponse.addHeader("Content-Disposition","attachment; filename=\"employees.csv\"");
+        csvExportService.writeEmployeesToCsv(servletResponse.getWriter());
+    }
+    @Autowired
+    CSVService fileService;
+
+    @GetMapping("/download")
+    public ResponseEntity<Resource> getFile() {
+        String filename = "tutorials.csv";
+        InputStreamResource file = new InputStreamResource(fileService.load());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+                .contentType(MediaType.parseMediaType("application/csv"))
+                .body(file);
     }
 }
